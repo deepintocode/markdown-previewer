@@ -2,6 +2,17 @@ import React, { Component } from 'react';
 import marked from 'marked';
 import './App.css';
 
+// Interpret return button presses as line breaks
+marked.setOptions({
+  breaks: true,
+});
+
+// Option to open links in new tabs
+const renderer = new marked.Renderer();
+renderer.link = function (href, title, text) {
+  return `<a target="_blank" href="${href}">${text}` + '</a>';
+}
+
 class App extends Component {
   text = `# Header
 
@@ -32,12 +43,12 @@ console.log(message);
 
   convertText = (e) => {
     this.setState({ text: e.target.value },
-      () => document.getElementById('preview').innerHTML = marked(this.state.text)
+      () => document.getElementById('preview').innerHTML = marked(this.state.text, { renderer: renderer})
     );
   }
   componentDidMount = () => {
     this.setState({ text: document.getElementById('editor').value },
-      () => document.getElementById('preview').innerHTML = marked(this.state.text)
+      () => document.getElementById('preview').innerHTML = marked(this.state.text, { renderer: renderer})
     );
   }
   render() {
